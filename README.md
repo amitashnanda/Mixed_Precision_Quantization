@@ -7,11 +7,11 @@ Large language models like GPT, Gemini, Llama, etc., have transformed the compre
 
 ```bash
 # Classification tasks
-cd /data/space1/BooleanLab/Amitash/Quant_LLM/Mixed_Precision_Quantization/src/Classification_tasks
+cd /Quant_LLM/Mixed_Precision_Quantization/src/Classification_tasks
 python Mixed_quantization_main_Opt1_final_1.3b.py
 
 # Language Modelling
-cd /data/space1/BooleanLab/Amitash/Quant_LLM/Mixed_Precision_Quantization/src/Language_Modelling
+cd /Quant_LLM/Mixed_Precision_Quantization/src/Language_Modelling
 python Mixed_quantization_main_wikitext_Llama2.py
 
 pip install awscli
