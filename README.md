@@ -18,5 +18,28 @@ pip install awscli
 aws configure
 pip install sagemaker
 
+# Folder structure
+mixed_precision_quantization/
+│
+├── src/
+│   ├── Classification_tasks/
+│   │   ├── Correlation based quantization
+│   │   │      ├── Correlation based Mixed Precision Qunatization.py
+│   │   └── Pruning based Mixed Precision Qunatization 
+│   │   │      ├── Pruning based Mixed Precision Qunatization.py
+│   │   └── Taylor decomposition based Mixed Precision Qunatization
+│   │   │      ├── Taylor decomposition based Mixed Precision Qunatization.py
+|   |   └── Main Mixed Precision Qunatization.py 
+│   ├── Language modelling tasks
+│   │   ├── Correlation based quantization
+│   │   │      ├── Correlation based Mixed Precision Qunatization.py
+│   │   └── Pruning based Mixed Precision Qunatization 
+│   │   │      ├── Pruning based Mixed Precision Qunatization.py
+│   │   └── Taylor decomposition based Mixed Precision Qunatization
+│   │   │      ├── Taylor decomposition based Mixed Precision Qunatization.py
+|   |   └── Main Mixed Precision Qunatization.py 
+├── Readme.MD
 
+
+    
 
