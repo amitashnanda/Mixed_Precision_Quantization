@@ -18,7 +18,7 @@ pip install awscli
 aws configure
 pip install sagemaker
 
-# Folder structure
+## Folder structure
 mixed_precision_quantization/
 │
 ├── src/
