@@ -39,6 +39,9 @@ Mixed_precision_quantization/
 |   |   └── Main Mixed Precision Qunatization.py 
 ├── Readme.MD
 
+##reference
+Run main file
+python3 main.py
 
     
 
