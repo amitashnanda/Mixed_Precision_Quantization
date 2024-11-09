@@ -1,8 +1,7 @@
 # Mixed_Precision_Quantization
 
 CPTQuant is a novel mixed precision quantization technique combining correlation-based, pruning-based, and Taylor decomposition-based methods to optimize LLM compression. By strategically adjusting precision levels, CPTQuant achieves up to 4x compression and 2x efficiency with minimal accuracy loss, particularly excelling in sensitive layer preservation. PMPQ provides superior compression for classification tasks, while TDMPQ excels in language modeling.
-
-## Commands:
+# Commands:
 
 ```bash
 # Classification tasks
@@ -18,6 +17,7 @@ aws configure
 pip install sagemaker
 
 ## Folder structure:
+
 Mixed_precision_quantization/
 │
 ├── src/
