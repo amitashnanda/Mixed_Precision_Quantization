@@ -7,6 +7,10 @@ from sklearn.cross_decomposition import CCA
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import json
 from tqdm import tqdm
+import numpy as np
+import time
+
+start_time = time.time()
 
 # Load the mps device
 if torch.backends.mps.is_available():
@@ -35,8 +39,7 @@ dataset.set_format(type='torch', columns=['input_ids', 'attention_mask', 'label'
 dataloader = DataLoader(dataset, batch_size=1, shuffle=True)
 
 # Extract layer outputs
-import torch
-import numpy as np
+
 
 def extract_layer_outputs(dataloader, model, device):
     # Ensure the model outputs hidden states
@@ -95,8 +98,13 @@ for target_layer_index in tqdm(range(num_layers)):
     layer_sensitivitites["layer_"+str(target_layer_index)]=layer_sensitivity
     print(f"Sensitivity of {layer_key}: {layer_sensitivity:.3f}")
 
+end_time = time.time()
+print(f"Time taken: {end_time - start_time:.2f} seconds")
+
+time_taken = end_time - start_time
+
 # save the layer sensitivitites list to a json file
-with open('layer_sensitivitites_opt_125m.json', 'w') as f:
+with open(f'saved_data/layer_sensitivitites_opt_125m_{time_taken:.2f}.json', 'w') as f:
     json.dump(layer_sensitivitites, f)
 
 print("Saved the layer sensitivitites to layer_sensitivitites_opt_125m.json")

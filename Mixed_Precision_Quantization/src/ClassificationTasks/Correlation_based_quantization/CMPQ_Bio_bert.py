@@ -6,6 +6,9 @@ import numpy as np
 from sklearn.cross_decomposition import CCA
 import json
 from tqdm import tqdm
+import time
+
+start_time = time.time()
 
 device = torch.device("cuda:3" if torch.cuda.is_available() else "cpu")
 
@@ -115,8 +118,13 @@ for target_layer_index in tqdm(range(num_layers)):
     layer_sensitivitites["layer_"+str(target_layer_index)]=layer_sensitivity
     print(f"Sensitivity of {layer_key}: {layer_sensitivity:.3f}")
 
+end_time = time.time()
+print(f"Time taken: {end_time - start_time:.2f} seconds")
+
+time_taken = end_time - start_time
+
 # save the layer sensitivitites list to a json file
-with open('saved_data/layer_sensitivitites_biobert.json', 'w') as f:
+with open(f'saved_data/layer_sensitivitites_biobert_{time_taken:.2f}.json', 'w') as f:
     json.dump(layer_sensitivitites, f)
 
 print("Saved the layer sensitivitites to layer_sensitivitites_biobert.json")
