@@ -5,7 +5,21 @@ from torch.utils.data import DataLoader
 import numpy as np
 from sklearn.cross_decomposition import CCA
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
+import time
+import json
+from tqdm import tqdm
+
+
+start_time = time.time()
+
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
+# Load the mps device
+if torch.backends.mps.is_available():
+    device = torch.device("mps")
+else:
+    device = torch.device("cpu")
+print(f"device : {device}")
 
 # Load the tokenizer and model
 model_name = "facebook/opt-350m"  # Change this to 'facebook/opt-2.7b' for OPT-2
@@ -26,9 +40,7 @@ dataset.set_format(type='torch', columns=['input_ids', 'attention_mask', 'label'
 # Create DataLoader
 dataloader = DataLoader(dataset, batch_size=1, shuffle=True)
 
-# Extract layer outputs
-import torch
-import numpy as np
+
 
 def extract_layer_outputs(dataloader, model, device):
     # Ensure the model outputs hidden states
@@ -39,7 +51,7 @@ def extract_layer_outputs(dataloader, model, device):
     layer_outputs = {f'layer_{i}': [] for i in range(model.config.num_hidden_layers + 1)}
 
     with torch.no_grad():
-        for batch in dataloader:
+        for batch in tqdm(dataloader):
             inputs = {key: val.to(device) for key, val in batch.items() if key in ['input_ids', 'attention_mask']}
             outputs = model(**inputs)
             hidden_states = outputs.hidden_states  # This will now contain the hidden states
@@ -62,15 +74,12 @@ def compute_layer_sensitivity(layer_outputs, target_layer_index):
     target_layer_key = f'layer_{target_layer_index}'
     cca = CCA(n_components=1)
     target_data = layer_outputs[target_layer_key]
-    # print("target_layer_index")
-    # print(target_layer_index)
     for key, data in layer_outputs.items():
         if key != target_layer_key:
             cca.fit(target_data, data)
             X_c, Y_c = cca.transform(target_data, data)
             correlation = np.corrcoef(X_c.T, Y_c.T)[0, 1]
             sensitivities.append(correlation)
-            print(correlation)
 
     # Return the average sensitivity for the target layer
     average_sensitivity = 1 - np.mean(sensitivities)  # Lower correlation implies higher sensitivity
@@ -82,11 +91,20 @@ target_layer_index = 0  # Specify the layer index you are interested in
 layer_sensitivitites = {}
 num_layers = model.config.num_hidden_layers
 
-while target_layer_index< num_layers:
+
+# Use a for loop to iterate over the layer indices
+for target_layer_index in tqdm(range(num_layers)):
     layer_key, layer_sensitivity = compute_layer_sensitivity(layer_outputs, target_layer_index)
-    print("layer sensitivity")
-    print(layer_sensitivity)
-    # {'layer_0': 0.1, 'layer_1': 0.5, 'layer_2': 0.9}
     layer_sensitivitites["layer_"+str(target_layer_index)]=layer_sensitivity
     print(f"Sensitivity of {layer_key}: {layer_sensitivity:.3f}")
-    target_layer_index+=1
+
+end_time = time.time()
+print(f"Time taken: {end_time - start_time:.2f} seconds")
+
+time_taken = end_time - start_time
+
+# save the layer sensitivitites list to a json file
+with open(f'saved_data/layer_sensitivitites_opt_350m_{time_taken:.2f}.json', 'w') as f:
+    json.dump(layer_sensitivitites, f)
+
+print("Saved the layer sensitivitites to layer_sensitivitites_opt_350m.json")
