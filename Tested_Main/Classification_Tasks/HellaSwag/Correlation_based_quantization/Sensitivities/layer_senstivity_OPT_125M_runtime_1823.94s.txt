@@ -1,0 +1,16 @@
+# PWCCA sensitivities for OPT-125M on HellaSwag (computed on val)
+num_gpus: 4
+batch_size: 64
+time_s: 1823.94
+layer_0	0.027518
+layer_1	0.021264
+layer_2	0.024099
+layer_3	0.020330
+layer_4	0.017067
+layer_5	0.015486
+layer_6	0.015236
+layer_7	0.014565
+layer_8	0.014876
+layer_9	0.015951
+layer_10	0.019316
+layer_11	0.023838
