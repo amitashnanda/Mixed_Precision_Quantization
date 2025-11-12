@@ -1,0 +1,53 @@
+# Mixed-Precision PTQ (PWCCA-based) | IMDB | BERT-base-uncased
+# Calibration: TRAIN set (5000 examples)
+# Evaluation: TEST set (25000 examples)
+model_name: textattack/bert-base-uncased-imdb
+device: cuda
+num_gpus: 4
+batch_size: 32
+test_samples: 25000
+
+# Metrics BEFORE Quantization (FP32):
+acc_before: 0.930280
+precision_before: 0.942493
+recall_before: 0.916480
+f1_before: 0.929304
+
+# Metrics AFTER Quantization:
+acc_after: 0.498000
+precision_after: 0.498933
+recall_after: 0.934960
+f1_after: 0.650651
+
+# Performance Drops:
+acc_drop: 0.432280 (46.47%)
+precision_drop: 0.443560
+recall_drop: -0.018480
+f1_drop: 0.278653
+
+# Compression Metrics:
+orig_bits: 2736832512
+quant_bits: 372781056
+reduction_pct: 86.38
+compression_ratio: 7.342
+fp32_model_size_mb: 326.26
+quant_model_size_mb: 44.44
+quantize_time_s: 0.010
+
+# Performance Metrics:
+latency_per_batch_s: 0.10130
+throughput_samples_per_s: 315.89
+
+# Layer Bit Allocation:
+  layer_0: 4-bit
+  layer_1: 4-bit
+  layer_2: 4-bit
+  layer_3: 2-bit
+  layer_4: 2-bit
+  layer_5: 2-bit
+  layer_6: 2-bit
+  layer_7: 2-bit
+  layer_8: 2-bit
+  layer_9: 4-bit
+  layer_10: 8-bit
+  layer_11: 16-bit

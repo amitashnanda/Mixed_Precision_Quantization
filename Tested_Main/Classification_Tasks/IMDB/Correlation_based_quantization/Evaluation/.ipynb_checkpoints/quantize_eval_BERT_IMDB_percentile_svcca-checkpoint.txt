@@ -1,0 +1,55 @@
+# Mixed-Precision PTQ (SVCCA-based) | IMDB | BERT-base-uncased
+# Calibration: TRAIN set (5000 examples)
+# Evaluation: TEST set (25000 examples)
+# Allocation strategy: percentile
+# Sensitivity method: svcca
+model_name: textattack/bert-base-uncased-imdb
+device: cuda
+num_gpus: 4
+batch_size: 32
+test_samples: 25000
+
+# Metrics BEFORE Quantization (FP32):
+acc_before: 0.930280
+precision_before: 0.942493
+recall_before: 0.916480
+f1_before: 0.929304
+
+# Metrics AFTER Quantization:
+acc_after: 0.513680
+precision_after: 0.943005
+recall_after: 0.029120
+f1_after: 0.056495
+
+# Performance Drops:
+acc_drop: 0.416600 (44.78%)
+precision_drop: -0.000512
+recall_drop: 0.887360
+f1_drop: 0.872809
+
+# Compression Metrics:
+orig_bits: 2736832512
+quant_bits: 769142784
+reduction_pct: 71.90
+compression_ratio: 3.558
+fp32_model_size_mb: 326.26
+quant_model_size_mb: 91.69
+quantize_time_s: 0.007
+
+# Performance Metrics:
+latency_per_batch_s: 0.10228
+throughput_samples_per_s: 312.86
+
+# Layer Bit Allocation:
+  layer_0: 8-bit
+  layer_1: 8-bit
+  layer_2: 8-bit
+  layer_3: 8-bit
+  layer_4: 4-bit
+  layer_5: 4-bit
+  layer_6: 4-bit
+  layer_7: 8-bit
+  layer_8: 8-bit
+  layer_9: 16-bit
+  layer_10: 16-bit
+  layer_11: 16-bit

@@ -1,0 +1,31 @@
+# Mixed-Precision PTQ (PWCCA-based) | HellaSwag | OPT-125M
+model_name: facebook/opt-125m
+model_type: CausalLM (perplexity-based scoring)
+device: cuda
+num_gpus: 4
+num_examples: 10042
+acc_before: 0.252141
+acc_after: 0.236706
+acc_drop: 0.015435
+orig_bits: 3953393664
+quant_bits: 705232896
+reduction_pct: 82.16
+compression_ratio: 5.606
+fp32_model_size_mb (est): 471.28
+quant_model_size_mb_est: 84.07
+quantize_time_s: 0.007
+latency_per_sample_s(approx): 0.03547
+throughput_samples_per_s(approx): 28.19
+layer_bits_map:
+  layer_0: 16-bit
+  layer_1: 4-bit
+  layer_2: 8-bit
+  layer_3: 4-bit
+  layer_4: 2-bit
+  layer_5: 2-bit
+  layer_6: 2-bit
+  layer_7: 2-bit
+  layer_8: 2-bit
+  layer_9: 2-bit
+  layer_10: 4-bit
+  layer_11: 8-bit

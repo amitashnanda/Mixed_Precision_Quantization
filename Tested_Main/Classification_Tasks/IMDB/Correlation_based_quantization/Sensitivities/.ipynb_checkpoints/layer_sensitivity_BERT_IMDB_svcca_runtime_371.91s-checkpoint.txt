@@ -1,0 +1,21 @@
+# SVCCA sensitivities for BERT-base-uncased on IMDB
+# Calibration: TRAIN set (first 5000 examples)
+method: svcca
+topk: 40
+model: textattack/bert-base-uncased-imdb
+num_gpus: 4
+batch_size: 64
+calibration_samples: 5000
+time_s: 371.91
+layer_0	0.285518
+layer_1	0.258081
+layer_2	0.239222
+layer_3	0.226970
+layer_4	0.214387
+layer_5	0.215943
+layer_6	0.218790
+layer_7	0.234290
+layer_8	0.262097
+layer_9	0.287567
+layer_10	0.331742
+layer_11	0.373276

@@ -1,0 +1,140 @@
+CUDA available: 4 GPUs detected
+device: cuda
+Using 4 GPUs with DataParallel
+Evaluating on TEST set: 25000 examples
+Map: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 25000/25000 [00:16<00:00, 1558.97 examples/s]
+Using batch size: 32
+
+==================================================
+Evaluating Fine-tuned BERT (FP32) Before Quantization
+==================================================
+Evaluating: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 782/782 [00:57<00:00, 13.59it/s]
+Accuracy:  0.9303
+Precision: 0.9425
+Recall:    0.9165
+F1-Score:  0.9293
+
+==================================================
+Applying Mixed-Precision Quantization
+==================================================
+Bit allocation per layer:
+  layer_0: 4-bit (sensitivity: 0.024479)
+  layer_1: 4-bit (sensitivity: 0.021585)
+  layer_2: 4-bit (sensitivity: 0.019146)
+  layer_3: 2-bit (sensitivity: 0.016482)
+  layer_4: 2-bit (sensitivity: 0.014728)
+  layer_5: 2-bit (sensitivity: 0.014347)
+  layer_6: 2-bit (sensitivity: 0.014593)
+  layer_7: 2-bit (sensitivity: 0.015239)
+  layer_8: 2-bit (sensitivity: 0.017558)
+  layer_9: 4-bit (sensitivity: 0.022948)
+  layer_10: 8-bit (sensitivity: 0.029274)
+  layer_11: 16-bit (sensitivity: 0.040099)
+
+Quantization time: 0.009s
+Model size: 326.26 MB → 44.44 MB
+Compression ratio: 7.34x
+Size reduction: 86.38%
+
+==================================================
+Evaluating Quantized BERT After Mixed-Precision PTQ
+==================================================
+Evaluating:   0%|                                                                                                                                      | 0/782 [00:00<?, ?it/s]/pscratch/sd/a/ananda/Mixed_Precision_Quantization/Tested_Main/Classification_Tasks/IMDB/Correlation_based_quantization/quantize_eval_BERT_IMDB.py:60: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  scale = torch.clamp(torch.tensor(scale, device=x.device, dtype=x.dtype), min=1e-8)
+Evaluating:   0%|                                                                                                                                      | 0/782 [00:00<?, ?it/s]
+Traceback (most recent call last):
+  File "/pscratch/sd/a/ananda/Mixed_Precision_Quantization/Tested_Main/Classification_Tasks/IMDB/Correlation_based_quantization/quantize_eval_BERT_IMDB.py", line 349, in <module>
+    main()
+  File "/pscratch/sd/a/ananda/Mixed_Precision_Quantization/Tested_Main/Classification_Tasks/IMDB/Correlation_based_quantization/quantize_eval_BERT_IMDB.py", line 248, in main
+    acc_after, prec_after, rec_after, f1_after = evaluate_model(model_q, test_loader, device)
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/pscratch/sd/a/ananda/Mixed_Precision_Quantization/Tested_Main/Classification_Tasks/IMDB/Correlation_based_quantization/quantize_eval_BERT_IMDB.py", line 131, in evaluate_model
+    outputs = model(input_ids=input_ids, attention_mask=attention_mask)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/pscratch/sd/a/ananda/conda_envs/smpquant/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/pscratch/sd/a/ananda/conda_envs/smpquant/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/pscratch/sd/a/ananda/conda_envs/smpquant/lib/python3.12/site-packages/torch/nn/parallel/data_parallel.py", line 193, in forward
+    outputs = self.parallel_apply(replicas, inputs, module_kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/pscratch/sd/a/ananda/conda_envs/smpquant/lib/python3.12/site-packages/torch/nn/parallel/data_parallel.py", line 212, in parallel_apply
+    return parallel_apply(
+           ^^^^^^^^^^^^^^^
+  File "/pscratch/sd/a/ananda/conda_envs/smpquant/lib/python3.12/site-packages/torch/nn/parallel/parallel_apply.py", line 126, in parallel_apply
+    output.reraise()
+  File "/pscratch/sd/a/ananda/conda_envs/smpquant/lib/python3.12/site-packages/torch/_utils.py", line 715, in reraise
+    raise exception
+TypeError: Caught TypeError in replica 1 on device 1.
+Original Traceback (most recent call last):
+  File "/pscratch/sd/a/ananda/conda_envs/smpquant/lib/python3.12/site-packages/torch/nn/parallel/parallel_apply.py", line 96, in _worker
+    output = module(*input, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/pscratch/sd/a/ananda/conda_envs/smpquant/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/pscratch/sd/a/ananda/conda_envs/smpquant/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/pscratch/sd/a/ananda/conda_envs/smpquant/lib/python3.12/site-packages/transformers/models/bert/modeling_bert.py", line 1665, in forward
+    outputs = self.bert(
+              ^^^^^^^^^^
+  File "/pscratch/sd/a/ananda/conda_envs/smpquant/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/pscratch/sd/a/ananda/conda_envs/smpquant/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/pscratch/sd/a/ananda/conda_envs/smpquant/lib/python3.12/site-packages/transformers/models/bert/modeling_bert.py", line 1142, in forward
+    encoder_outputs = self.encoder(
+                      ^^^^^^^^^^^^^
+  File "/pscratch/sd/a/ananda/conda_envs/smpquant/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/pscratch/sd/a/ananda/conda_envs/smpquant/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/pscratch/sd/a/ananda/conda_envs/smpquant/lib/python3.12/site-packages/transformers/models/bert/modeling_bert.py", line 695, in forward
+    layer_outputs = layer_module(
+                    ^^^^^^^^^^^^^
+  File "/pscratch/sd/a/ananda/conda_envs/smpquant/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/pscratch/sd/a/ananda/conda_envs/smpquant/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/pscratch/sd/a/ananda/conda_envs/smpquant/lib/python3.12/site-packages/transformers/models/bert/modeling_bert.py", line 585, in forward
+    self_attention_outputs = self.attention(
+                             ^^^^^^^^^^^^^^^
+  File "/pscratch/sd/a/ananda/conda_envs/smpquant/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/pscratch/sd/a/ananda/conda_envs/smpquant/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/pscratch/sd/a/ananda/conda_envs/smpquant/lib/python3.12/site-packages/transformers/models/bert/modeling_bert.py", line 515, in forward
+    self_outputs = self.self(
+                   ^^^^^^^^^^
+  File "/pscratch/sd/a/ananda/conda_envs/smpquant/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/pscratch/sd/a/ananda/conda_envs/smpquant/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/pscratch/sd/a/ananda/conda_envs/smpquant/lib/python3.12/site-packages/transformers/models/bert/modeling_bert.py", line 395, in forward
+    query_layer = self.transpose_for_scores(self.query(hidden_states))
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/pscratch/sd/a/ananda/conda_envs/smpquant/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/pscratch/sd/a/ananda/conda_envs/smpquant/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/pscratch/sd/a/ananda/Mixed_Precision_Quantization/Tested_Main/Classification_Tasks/IMDB/Correlation_based_quantization/quantize_eval_BERT_IMDB.py", line 79, in forward
+    self.inner.weight = orig_w
+    ^^^^^^^^^^^^^^^^^
+  File "/pscratch/sd/a/ananda/conda_envs/smpquant/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1959, in __setattr__
+    raise TypeError(
+TypeError: cannot assign 'torch.cuda.FloatTensor' as parameter 'weight' (torch.nn.Parameter or None expected)
