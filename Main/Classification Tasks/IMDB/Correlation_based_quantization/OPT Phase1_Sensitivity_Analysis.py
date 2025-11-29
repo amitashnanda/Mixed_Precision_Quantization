@@ -470,30 +470,40 @@ def main():
     print_section("STEP 3: SAMPLING STRATEGY")
     print("""
     How to sample from calibration data:
-    
+
     - Random: Simple random sampling
     - Stratified: Balanced by label (50/50 pos/neg) - RECOMMENDED
-      → Ensures equal representation of both sentiment classes
+    → Ensures equal representation of both sentiment classes
     """)
-    
+
     sampling_choice = prompt_user(
         "Select sampling strategy:",
         ["Random sampling", "Stratified sampling (recommended)"],
         default="Stratified sampling (recommended)"
     )
-    
+
     if "Stratified" in sampling_choice:
-        pos_examples = [ex for ex in calibration_set if ex["label"] == 1]
-        neg_examples = [ex for ex in calibration_set if ex["label"] == 0]
+        # ✅ FIXED: Use proper dataset filtering and concatenation
+        pos_indices = [i for i, ex in enumerate(calibration_set) if ex["label"] == 1]
+        neg_indices = [i for i, ex in enumerate(calibration_set) if ex["label"] == 0]
         
-        n_take = min(len(pos_examples), len(neg_examples), calib_size // 2)
-        calibration_set = calibration_set.__class__(
-            pos_examples[:n_take] + neg_examples[:n_take]
-        )
-        print(f"✓ Using stratified sampling: {len(calibration_set)} examples (50/50 pos/neg split)")
+        n_take = min(len(pos_indices), len(neg_indices), calib_size // 2)
+        
+        # Select indices and use dataset.select()
+        selected_pos_indices = pos_indices[:n_take]
+        selected_neg_indices = neg_indices[:n_take]
+        selected_indices = selected_pos_indices + selected_neg_indices
+        
+        # Use proper dataset select method
+        calibration_set = calibration_set.select(selected_indices)
+        
+        print(f"✓ Using stratified sampling: {len(calibration_set)} examples")
+        print(f"  - Positive examples: {n_take}")
+        print(f"  - Negative examples: {n_take}")
+        print(f"  - Total: {len(calibration_set)}")
     else:
         print(f"✓ Using random sampling: {len(calibration_set)} examples")
-    
+        
     # ========== STEP 5: Tokenize ==========
     print_section("STEP 4: TOKENIZING DATA")
     print(f"Tokenizing {len(calibration_set)} examples with max_length=512...")
