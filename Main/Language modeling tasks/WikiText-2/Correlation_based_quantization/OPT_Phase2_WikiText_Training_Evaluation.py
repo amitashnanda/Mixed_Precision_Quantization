@@ -30,24 +30,25 @@ Author: Mixed-Precision Quantization Team
 Date: 2025
 """
 
+# ✅ ALL REQUIRED IMPORTS - MUST BE AT TOP
 import os
 import re
 import json
 import time
 import random
+import warnings
+import numpy as np
 import torch
 import torch.nn as nn
 from datetime import datetime
 from tqdm import tqdm
 from pathlib import Path
 
-import numpy as np
 from torch.utils.data import DataLoader, Dataset
 from datasets import load_dataset
 from transformers import AutoTokenizer, AutoModel, AdamW
 from sklearn.cluster import KMeans, AgglomerativeClustering
 
-import warnings
 warnings.filterwarnings('ignore')
 
 # ============================================================================
@@ -350,7 +351,11 @@ def train_epoch(model, dataloader, optimizer, device, epoch, log_file=None):
         num_batches += 1
         
         progress_bar.set_postfix({"loss": loss.item()})
-    
+
+        # ✅ ADD THIS BLOCK - Clear cache after each batch
+        del outputs, loss, input_ids, attention_mask, labels
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
     avg_loss = total_loss / num_batches
     perplexity = calculate_perplexity(avg_loss)
     
@@ -391,6 +396,10 @@ def evaluate(model, dataloader, device, eval_type="Validation"):
         
         progress_bar.set_postfix({"loss": loss.item()})
     
+        # ✅ ADD THIS BLOCK - Clear cache after each batch
+        del outputs, loss, input_ids, attention_mask, labels
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
     avg_loss = total_loss / num_batches
     perplexity = calculate_perplexity(avg_loss)
     
@@ -749,6 +758,11 @@ def main():
     baseline_loss, baseline_ppl = evaluate(model, val_loader, device, "Baseline Validation")
     print(f"✓ Baseline - Loss: {baseline_loss:.4f}, Perplexity: {baseline_ppl:.4f}")
     
+    # ✅ ADD THIS BLOCK - Clear cache before starting training
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
+        print("✓ Cleared GPU cache before training")
+    
     # ========== STEP 12: Training Loop ==========
     print_section("STEP 12: TRAINING QUANTIZED MODEL")
     
@@ -791,6 +805,11 @@ def main():
             f.write(f"Epoch {epoch} - Train Loss: {train_loss:.4f}, Perplexity: {train_ppl:.4f}\n")
             f.write(f"Epoch {epoch} - Val Loss: {val_loss:.4f}, Perplexity: {val_ppl:.4f}\n\n")
     
+        # ✅ ADD THIS BLOCK - Clear cache between epochs
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+            print(f"✓ Cleared GPU cache after Epoch {epoch}")
+        
     # ========== STEP 13: Final Evaluation ==========
     print_section("STEP 13: FINAL EVALUATION")
     print("Computing final metrics after training...")
